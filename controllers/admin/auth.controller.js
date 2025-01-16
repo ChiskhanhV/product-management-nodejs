@@ -3,6 +3,9 @@ const systemConfig = require("../../config/system");
 const md5 = require("md5");
 //[GET] /admin/auth/login
 module.exports.login = (req, res) => {
+  if (req.cookies.token) {
+    res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
+  }
   res.render("admin/pages/auth/login", {
     pageTitle: "Đăng nhập",
   });
@@ -31,10 +34,10 @@ module.exports.loginPost = async (req, res) => {
     return;
   }
   res.cookie("token", user.token);
-  res.redirect(`${systemConfig.prefixAdmin}/dashboard`)
+  res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
 };
 //[GET] /admin/auth/logout
 module.exports.logout = (req, res) => {
-    res.clearCookie("token");
-    res.redirect(`${systemConfig.prefixAdmin}/login`);
-  };
+  res.clearCookie("token");
+  res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
+};
